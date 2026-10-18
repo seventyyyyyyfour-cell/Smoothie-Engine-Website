@@ -6,6 +6,7 @@
   <title>Download - Smoothie Engine</title>
   <meta name="description" content="Download Smoothie Engine.">
   <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/png" href="Smoothie_Engine_Icon.png">
 </head>
 <body>
 
@@ -18,6 +19,7 @@
         <ul class="nav-list">
           <li><a href="download.html" aria-current="page">Download</a></li>
           <li><a href="wiki.html">How to Use</a></li>
+          <li><a href="index.html#feedback">Feedback</a></li>
         </ul>
       </nav>
     </div>
@@ -30,30 +32,54 @@
         <h1>Download</h1>
         <p class="lead">Pick your platform below.</p>
         <p class="lead">Smoothie Engine is currently only supported on Windows. Linux support is experimental. Don't even get me started on macOS.</p>
+        <p class="download-count" aria-live="polite">
+          <strong id="dl-count">…</strong> <span>downloads</span>
+        </p>
       </div>
     </section>
 
     <section class="section">
       <div class="container">
-        <div class="card-grid">
+        <div class="card-grid download-grid">
+
           <article class="card card-white">
-            <h3>Windows</h3>
-            <p>Version 1.0.0</p>
-            <p> </p>
-            <p> </p>
-            <p> </p>
-            <p> </p>
-            <p> </p>
-            <p> </p>
-            <a class="button button-secondary" href="https://github.com/seventyyyyyyfour-cell/Smoothie-Engine/releases/tag/MainUpdate" target="_blank">Get it on GitHub</a> <a class="button" href="https://github.com/seventyyyyyyfour-cell/Smoothie-Engine/releases/download/MainUpdate/Smoothie.Engine.zip">Download Here</a>
+            <div class="card-head">
+              <h3>Windows</h3>
+              <span class="tag tag-ok">Supported</span>
+            </div>
+            <dl class="spec">
+              <dt>Version</dt><dd>1.0.0</dd>
+              <dt>File</dt><dd>Smoothie.Engine.zip</dd>
+            </dl>
+            <div class="card-actions button-row">
+              <a class="button" href="https://github.com/seventyyyyyyfour-cell/Smoothie-Engine/releases/download/MainUpdate/Smoothie.Engine.zip">Download for Windows</a>
+              <a class="button button-secondary" href="https://github.com/seventyyyyyyfour-cell/Smoothie-Engine/releases/tag/MainUpdate" target="_blank" rel="noopener">Get it on GitHub</a>
+            </div>
           </article>
+
           <article class="card card-blue">
+<<<<<<< HEAD
             <h3>Linux</h3>
             <P style="color: #ff0000; font-weight: bold;">WARNING</P>
             <p style="color: #ff0000; font-weight: bold;">Linux support is experimental and isn't fully integrated. This program was made with windows in mind.</p>
             <p style="color: #ff0000; font-weight: bold;">Test it on linux! Let us know how it goes.</p>
             <a class="button button-secondary" href="https://github.com/seventyyyyyyfour-cell/Smoothie-Engine/releases/tag/MainUpdate" target="_blank">Get it on GitHub</a> <a class="button" href="https://github.com/seventyyyyyyfour-cell/Smoothie-Engine/releases/download/MainUpdate/Smoothie.Engine.zip">Download Here</a>
+=======
+            <div class="card-head">
+              <h3>Linux</h3>
+              <span class="tag tag-warn">Experimental</span>
+            </div>
+            <div class="callout" role="note">
+              <p><strong>Linux support isn't fully integrated.</strong> This program was made with Windows in mind.</p>
+              <p>Test it on Linux and let us know how it goes.</p>
+            </div>
+            <div class="card-actions button-row">
+              <a class="button" href="https://github.com/seventyyyyyyfour-cell/Smoothie-Engine/releases/download/MainUpdate/Smoothie.Engine.zip">Download for Linux</a>
+              <a class="button button-secondary" href="index.html#feedback" target="_blank" rel="noopener">Feedback</a>
+            </div>
+>>>>>>> 41cb77a (Added feedback, download counter, and polished looks)
           </article>
+
         </div>
       </div>
     </section>
@@ -68,6 +94,49 @@
       </ul>
     </div>
   </footer>
+
+  <script>
+  (function () {
+    const REPO = "seventyyyyyyfour-cell/Smoothie-Engine";
+    const TAG = "MainUpdate";
+    const ASSET = "Smoothie.Engine.zip";
+    const CACHE_KEY = "dl-count-cache";
+    const CACHE_MS = 10 * 60 * 1000;
+
+    const el = document.getElementById("dl-count");
+    if (!el) return;
+
+    const show = (n) => { el.textContent = Number(n).toLocaleString(); };
+
+    try {
+      const cached = JSON.parse(localStorage.getItem(CACHE_KEY));
+      if (cached && Date.now() - cached.time < CACHE_MS) {
+        show(cached.count);
+        return;
+      }
+    } catch (e) {}
+
+    fetch(`https://api.github.com/repos/${REPO}/releases/tags/${TAG}`)
+      .then((r) => {
+        if (!r.ok) throw new Error("GitHub API error " + r.status);
+        return r.json();
+      })
+      .then((release) => {
+        const asset = release.assets.find((a) => a.name === ASSET);
+        if (!asset) throw new Error("Asset not found");
+        show(asset.download_count);
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify({
+            count: asset.download_count,
+            time: Date.now()
+          }));
+        } catch (e) {}
+      })
+      .catch(() => {
+        el.parentElement.style.display = "none";
+      });
+  })();
+  </script>
 
 </body>
 </html>
