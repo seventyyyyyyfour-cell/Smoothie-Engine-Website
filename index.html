@@ -6,6 +6,33 @@
   <title>Smoothie Engine</title>
   <meta name="description" content="Learn how to build small games and levels with Smoothie Engine.">
   <link rel="stylesheet" href="style.css">
+  <style>
+    .hero {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero .container {
+      position: relative;
+      z-index: 1;
+    }
+
+    .bg-gif {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      width: 55%;
+      background: url("Start.gif") center right / cover no-repeat;
+      pointer-events: none;
+      -webkit-mask-image: linear-gradient(to left, #000 35%, transparent 100%);
+      mask-image: linear-gradient(to left, #000 35%, transparent 100%);
+    }
+
+    @media (max-width: 700px) {
+      .bg-gif { width: 100%; opacity: .25; }
+    }
+  </style>
   <link rel="icon" type="image/png" href="Smoothie_Engine_Icon.png">
 </head>
 <body>
@@ -28,6 +55,7 @@
   <main id="main">
 
     <section class="hero">
+      <div class="bg-gif" aria-hidden="true"></div>
       <div class="container">
         <h1>Build small games and levels.</h1>
         <p class="lead">Use this website to learn how to create and design interactive experiences with Smoothie Engine.</p>
