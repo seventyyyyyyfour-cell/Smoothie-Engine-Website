@@ -21,9 +21,11 @@
       position: absolute;
       top: 0;
       right: 0;
-      bottom: 0;
+      bottom: -40px;
       width: 55%;
-      background: url("Start.gif") center right / cover no-repeat;
+      transform: translateY(-120px);
+      object-fit: cover;
+      object-position: center right;
       pointer-events: none;
       -webkit-mask-image: linear-gradient(to left, #000 35%, transparent 100%);
       mask-image: linear-gradient(to left, #000 35%, transparent 100%);
@@ -55,7 +57,9 @@
   <main id="main">
 
     <section class="hero">
-      <div class="bg-gif" aria-hidden="true"></div>
+      <video class="bg-gif" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+        <source src="Start.mp4" type="video/mp4">
+      </video>
       <div class="container">
         <h1>Build small games and levels.</h1>
         <p class="lead">Use this website to learn how to create and design interactive experiences with Smoothie Engine.</p>
