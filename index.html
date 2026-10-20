@@ -23,7 +23,7 @@
       right: 0;
       bottom: -40px;
       width: 55%;
-      transform: translateY(-120px);
+      transform: translate(0, -15%);
       object-fit: cover;
       object-position: center right;
       pointer-events: none;
@@ -31,8 +31,10 @@
       mask-image: linear-gradient(to left, #000 35%, transparent 100%);
     }
 
-    @media (max-width: 700px) {
-      .bg-gif { width: 100%; opacity: .25; }
+    .bg-gif { display: none; }
+
+      @media (min-width: 2160px) {
+      .bg-gif { display: block; }
     }
   </style>
   <link rel="icon" type="image/png" href="Smoothie_Engine_Icon.png">
@@ -57,9 +59,7 @@
   <main id="main">
 
     <section class="hero">
-      <video class="bg-gif" autoplay muted loop playsinline preload="auto" aria-hidden="true">
-        <source src="Start.mp4" type="video/mp4">
-      </video>
+      <video class="bg-gif" muted loop playsinline preload="none" aria-hidden="true" data-src="Start.mp4"></video>
       <div class="container">
         <h1>Build small games and levels.</h1>
         <p class="lead">Use this website to learn how to create and design interactive experiences with Smoothie Engine.</p>
@@ -115,69 +115,30 @@
   </footer>
 
   <script>
-  (function () {
-    const FORM_ID = "1FAIpQLScRIgUYPrMnvY7pOKBASUnkk_aRia_DMLcpPYJUalQB0FUi9w";
-    const ENTRIES = {
-      message: "entry.925480541",
-      email: "entry.1498463192"
-    };
+(function () {
+  const video = document.querySelector(".bg-gif");
+  const wide = window.matchMedia("(min-width: 1100px)");
+  if (!video) return;
 
-    const form = document.getElementById("feedback-form");
-    if (!form) return;
-
-    const status = document.getElementById("form-status");
-    const button = form.querySelector("button[type=submit]");
-    const url = `https://docs.google.com/forms/d/e/${FORM_ID}/formResponse`;
-
-    const say = (text, kind) => {
-      status.textContent = text;
-      status.className = "form-status" + (kind ? " is-" + kind : "");
-    };
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      if (form.elements.website.value) return;
-
-      if (Object.values(ENTRIES).some((v) => v.includes("REPLACE_ME"))) {
-        say("The form isn't connected to Google Forms yet.", "error");
-        return;
+  function update() {
+    if (wide.matches) {
+      if (!video.querySelector("source")) {
+        const s = document.createElement("source");
+        s.src = video.dataset.src;
+        s.type = "video/mp4";
+        video.appendChild(s);
+        video.load();
       }
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+    }
+  }
 
-      const message = form.elements.message.value.trim();
-      const email = form.elements.email.value.trim();
-
-      if (!message) {
-        say("Please write your feedback first.", "error");
-        form.elements.message.focus();
-        return;
-      }
-
-      if (!form.elements.email.checkValidity()) {
-        say("Please enter a valid email address.", "error");
-        form.elements.email.focus();
-        return;
-      }
-
-      const body = new URLSearchParams();
-      body.append(ENTRIES.message, message);
-      body.append(ENTRIES.email, email);
-
-      button.disabled = true;
-      say("Sending…");
-
-      try {
-        await fetch(url, { method: "POST", mode: "no-cors", body });
-        form.reset();
-        say("Thanks! Your feedback was sent.", "ok");
-      } catch (err) {
-        say("Something went wrong. Check your connection and try again.", "error");
-      } finally {
-        button.disabled = false;
-      }
-    });
-  })();
-  </script>
+  update();
+  wide.addEventListener("change", update);
+})();
+</script>
 
 </body>
 </html>
